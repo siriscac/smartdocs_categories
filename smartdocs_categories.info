@@ -1,0 +1,16 @@
+name = SmartDocs Categories
+description = This module enables API Catalog view for Apigee Developer Portals based on Drupal 7
+core = 7.x
+package = Features
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = image
+dependencies[] = options
+dependencies[] = taxonomy
+features[features_api][] = api:2
+features[field_base][] = field_model_category
+features[field_base][] = field_model_image
+features[field_instance][] = taxonomy_term-smartdocs_models-field_model_category
+features[field_instance][] = taxonomy_term-smartdocs_models-field_model_image
+features[image][] = smartdocs_400x243
+features[taxonomy][] = smartdocs_models_categories

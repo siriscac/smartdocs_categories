@@ -1,0 +1,189 @@
+<?php
+/**
+ * @file
+ * Code for the SmartDocs Categories feature.
+ */
+
+include_once 'smartdocs_categories.features.inc';
+
+/**
+ * Implements hook_views_api().
+ */
+function smartdocs_categories_views_api() {
+  return array(
+    'api' => '3.0',
+  );
+}
+
+/**
+ * Implements hook_views_default_views().
+ */
+function smartdocs_categories_views_default_views() {
+
+  $view = new view();
+  $view->name = 'smartdocs_models';
+  $view->description = 'Contains a page display to list all the models that have at least one published node in a grid format with categories.';
+  $view->tag = 'smartdocs';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'SmartDocs Models Categories';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'API Catalog';
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['group_by'] = TRUE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
+  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
+  $handler->display->display_options['exposed_form']['options']['bef'] = array(
+    'general' => array(
+      'input_required' => 0,
+      'text_input_required' => array(
+        'text_input_required' => array(
+          'value' => 'Select any filter and click on Apply to see results',
+          'format' => 'full_html',
+        ),
+      ),
+      'allow_secondary' => 0,
+      'secondary_label' => 'Advanced options',
+      'secondary_collapse_override' => '0',
+    ),
+    'field_model_category_tid' => array(
+      'bef_format' => 'bef',
+      'more_options' => array(
+        'bef_select_all_none' => 0,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+            1 => 'vocabulary',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+  );
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '0';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="smartdocs-no-models">We are currently working on putting together our API documentation; we will be publishing them shortly. Please check back again soon. Thanks for your patience!</div>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
+  /* Relationship: Taxonomy term: Content using Model */
+  $handler->display->display_options['relationships']['reverse_field_smart_method_model_node']['id'] = 'reverse_field_smart_method_model_node';
+  $handler->display->display_options['relationships']['reverse_field_smart_method_model_node']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['relationships']['reverse_field_smart_method_model_node']['field'] = 'reverse_field_smart_method_model_node';
+  $handler->display->display_options['relationships']['reverse_field_smart_method_model_node']['required'] = TRUE;
+  /* Field: Taxonomy term: Term ID */
+  $handler->display->display_options['fields']['tid']['id'] = 'tid';
+  $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['tid']['field'] = 'tid';
+  $handler->display->display_options['fields']['tid']['label'] = '';
+  $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['tid']['separator'] = '';
+  /* Field: Taxonomy term: Model Image */
+  $handler->display->display_options['fields']['field_model_image']['id'] = 'field_model_image';
+  $handler->display->display_options['fields']['field_model_image']['table'] = 'field_data_field_model_image';
+  $handler->display->display_options['fields']['field_model_image']['field'] = 'field_model_image';
+  $handler->display->display_options['fields']['field_model_image']['label'] = '';
+  $handler->display->display_options['fields']['field_model_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_model_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_model_image']['settings'] = array(
+    'image_style' => 'smartdocs_400x243',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_model_image']['group_column'] = 'entity_id';
+  /* Field: Taxonomy term: Display name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'field_data_field_model_display_name';
+  $handler->display->display_options['fields']['name']['field'] = 'field_model_display_name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['name']['alter']['path'] = 'taxonomy/term/[tid]';
+  $handler->display->display_options['fields']['name']['element_type'] = 'span';
+  $handler->display->display_options['fields']['name']['element_class'] = 'model_title';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  // /* Field: Taxonomy term: Term description */
+  // $handler->display->display_options['fields']['description']['id'] = 'description';
+  // $handler->display->display_options['fields']['description']['table'] = 'taxonomy_term_data';
+  // $handler->display->display_options['fields']['description']['field'] = 'description';
+  // $handler->display->display_options['fields']['name']['label'] = '';
+  // $handler->display->display_options['fields']['name']['element_class'] = 'model_description';
+  // $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'smartdocs_models' => 'smartdocs_models',
+  );
+  /* Filter criterion: COUNT(Content: Published) */
+  $handler->display->display_options['filters']['count_published']['id'] = 'count_published';
+  $handler->display->display_options['filters']['count_published']['table'] = 'node';
+  $handler->display->display_options['filters']['count_published']['field'] = 'status';
+  $handler->display->display_options['filters']['count_published']['relationship'] = 'reverse_field_smart_method_model_node';
+  $handler->display->display_options['filters']['count_published']['group_type'] = 'count';
+  $handler->display->display_options['filters']['count_published']['operator'] = '>=';
+  $handler->display->display_options['filters']['count_published']['value']['value'] = 1;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['relationship'] = 'reverse_field_smart_method_model_node';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  /* Filter criterion: Taxonomy term: Model Category (field_model_category) */
+  $handler->display->display_options['filters']['field_model_category_tid']['id'] = 'field_model_category_tid';
+  $handler->display->display_options['filters']['field_model_category_tid']['table'] = 'field_data_field_model_category';
+  $handler->display->display_options['filters']['field_model_category_tid']['field'] = 'field_model_category_tid';
+  $handler->display->display_options['filters']['field_model_category_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['operator_id'] = 'field_model_category_tid_op';
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['label'] = 'Categories';
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['operator'] = 'field_model_category_tid_op';
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['identifier'] = 'field_model_category_tid';
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_model_category_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_model_category_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_model_category_tid']['vocabulary'] = 'smartdocs_models_categories';
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'apis';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'APIs';
+  $handler->display->display_options['menu']['description'] = 'View API Documenation';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'main-menu';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page_1');
+
+  $views[$view->name] = $view;
+  return $views;
+}
